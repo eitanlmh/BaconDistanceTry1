@@ -1,6 +1,6 @@
-from modules.download_from_imdb import download_from_imdb
-from modules.data_parser import movie_ids, actor_ids, actor_per_movie
-from modules.dataset_writer import write_dataset
+from modules.generate_db_modules.download_from_imdb import download_from_imdb
+from modules.generate_db_modules.data_parser import movie_ids, actor_ids, actor_per_movie
+from modules.generate_db_modules.dataset_writer import write_dataset
 
 
 download_from_imdb() #download data from imdb files

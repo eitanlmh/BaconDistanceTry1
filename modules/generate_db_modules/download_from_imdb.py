@@ -7,7 +7,7 @@ urls = {
     "title_principals": "https://datasets.imdbws.com/title.principals.tsv.gz"
 }
 
-data_dir = "data/downloaded data"
+data_dir = "data/downloaded_data"
 
 def download_from_imdb():
     os.makedirs(data_dir, exist_ok=True)

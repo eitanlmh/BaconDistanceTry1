@@ -1,7 +1,7 @@
 import os
 import json
 
-data_dir = "data/parsed data"
+data_dir = "data/parsed_data"
 output = os.path.join(data_dir, "dataset.json")
 
 def write_dataset(actor_per_movie, max_movies=None):

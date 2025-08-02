@@ -4,7 +4,7 @@ import os
 from tqdm import tqdm
 
 
-data_dir = "data/downloaded data" # This is where our data is.
+data_dir = "data/downloaded_data" # This is where our data is.
 
 def movie_ids(): # return a dict of movie id with movie name
 
