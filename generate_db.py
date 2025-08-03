@@ -9,7 +9,6 @@ download_from_imdb() #download data from imdb files
 movie_ids = movie_ids()
 actor_ids = actor_ids()
 actor_per_movie = actor_per_movie(movie_ids, actor_ids)
-
 #write the dataset we need to continue
-write_dataset(actor_per_movie, max_movies=500)
+write_dataset(actor_per_movie)
 
