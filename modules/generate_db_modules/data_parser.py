@@ -1,17 +1,21 @@
 import gzip
 import csv
+import json
 import os
+import tempfile
+import heapq
 from tqdm import tqdm
 
 
 data_dir = "data/downloaded_data" # This is where our data is.
+chunk_size = 100000
 
 def movie_ids(): # return a dict of movie id with movie name
 
     print("files in data", os.listdir(data_dir)) #Listing directory files
 
     movie_file = os.path.join(data_dir, "title_basics.tsv.gz")
-    movie_ids = {}
+    movie_id = {}
 
     try:
         with gzip.open(movie_file, "rt", encoding="utf-8") as file:
@@ -24,19 +28,19 @@ def movie_ids(): # return a dict of movie id with movie name
                 if row.get("primaryTitle") == "\\N":
                     continue
 
-                movie_ids[row["tconst"]] = row["primaryTitle"]
+                movie_id[row["tconst"]] = row["primaryTitle"]
 
-        print("read {} movie IDs from {}".format(len(movie_ids), movie_file))
+        print("read {} movie IDs from {}".format(len(movie_id), movie_file))
     except Exception as e:
         print(f"failed to read movies data: {e}")
 
-    return movie_ids
+    return movie_id
 
 def actor_ids(): # return a dict of actor id with actor name
     print("files in data", os.listdir(data_dir)) #Listing directory files
 
     actor_file = os.path.join(data_dir, "name_basics.tsv.gz")
-    actor_ids = {}
+    actor_id = {}
 
     try:
         with gzip.open(actor_file, mode="rt", encoding="utf-8") as file:
@@ -44,13 +48,13 @@ def actor_ids(): # return a dict of actor id with actor name
             print("reading actor IDs from {}".format(actor_file))
 
             for row in tqdm(reader, desc="Processing actor IDs", unit="rows"):
-                actor_ids[row["nconst"]] = row["primaryName"]
+                actor_id[row["nconst"]] = row["primaryName"]
 
-        print("read {} actors IDs from {}".format(len(actor_ids), actor_file))
+        print("read {} actors IDs from {}".format(len(actor_id), actor_file))
     except Exception as e:
         print(f"failed to read actor data: {e}")
 
-    return actor_ids
+    return actor_id
 
 def actor_per_movie(movie_ids, actor_ids):
     print("files in data", os.listdir(data_dir)) #Listing directory files
@@ -83,9 +87,4 @@ def actor_per_movie(movie_ids, actor_ids):
 
     return actor_per_movie
 
-# if __name__ == "__main__":
-#
-#     #movie_ids()
-#     #actor_ids()
-#     actor_per_movie(movie_ids(), actor_ids())
 

@@ -2,7 +2,7 @@ from collections import deque
 
 def find_bacon_distance(graph, name_to_ids, actor_name, bacon_id="nm0000102"):
     if actor_name not in name_to_ids:
-        raise ValueError(f"actor '{actor_name} not found in dataset")
+        raise ValueError(f"actor {actor_name} not found in dataset")
 
     target_ids = name_to_ids[actor_name]
 
