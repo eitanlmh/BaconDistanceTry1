@@ -23,8 +23,9 @@ def build_actor_graph (json_path):
                 actor_name = line["actor_name"].strip()
 
                 actor_name_to_id[actor_name] = actor_id
-                movie_to_actors[movie_id].add(actor_id)
                 actor_name_to_movie_ids[actor_name].add(movie_id)
+
+                movie_to_actors[movie_id].add(actor_id)
 
                 actor_graph.add_node(actor_id, name=actor_name)
             except KeyError as e:
