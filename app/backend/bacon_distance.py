@@ -4,9 +4,9 @@ import os
 import pickle
 import time
 
-cache_path = "data/parsed_data/actor_graph.pkl"
+cache_path = "app/data/parsed_data/actor_graph.pkl"
 Kevin_Bacon_Name = "Kevin Bacon"
-dataset_path = "data/parsed_data/dataset.json"
+dataset_path = "app/data/parsed_data/dataset.json"
 
 def load_or_build_graph():
 
