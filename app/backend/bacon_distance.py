@@ -1,12 +1,12 @@
-from modules.bacon_distance_modules.bfs_search import find_bacon_distance
-from modules.bacon_distance_modules.graph_builder import build_actor_graph
+from app.backend.modules.bacon_distance_modules.bfs_search import find_bacon_distance
+from app.backend.modules.bacon_distance_modules.graph_builder import build_actor_graph
 import os
 import pickle
 import time
 
-cache_path = "app/data/parsed_data/actor_graph.pkl"
+cache_path = "data/parsed_data/actor_graph.pkl"
 Kevin_Bacon_Name = "Kevin Bacon"
-dataset_path = "app/data/parsed_data/dataset.json"
+dataset_path = "data/parsed_data/dataset.json"
 
 def load_or_build_graph():
 

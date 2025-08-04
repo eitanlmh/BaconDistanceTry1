@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
+    <head>
+        <meta charset="UTF-8">
+
+        <meta name="color-scheme" content="light dark">
+
+        <link rel="stylesheet" href="style.css">
+
+        <script type="text/javascript" src="js.js"></script>
+
+        <title>Distance from Kevin Bacon!</title>
+    </head>
+    <body class="column">
+        <h1>Welcome</h1>
+
+        <form id="searchForm" action="/main_page.html">
+            <label for="actor_name" style="align-content: center;">Please write an actor name to calculate the Distance from Kevin Bacon</label>
+            <input type="text" id="actor_name" name="actor_name" required>
+            <div class="error" id="actor_name_error"></div>
+
+            <button>Calculate</button>
+        </form>
+    </body>
 </html>
