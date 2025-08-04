@@ -66,7 +66,7 @@ def actor_per_movie(movie_ids, actor_ids):
         with gzip.open(actor_per_movie_file, "rt", encoding="utf-8") as file:
             reader = csv.DictReader(file, delimiter="\t")
             print("reading actor per movie IDs from {}".format(actor_per_movie_file))
-            for row in tqdm(reader, desc="Processing actor/movie pairs", unit="rows"):
+            for row in tqdm(reader, desc="Processing actor/movie pairs ", unit="rows"):
 
                 movie_id = row["tconst"]
                 actor_id = row["nconst"]
