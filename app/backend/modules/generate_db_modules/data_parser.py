@@ -1,9 +1,6 @@
 import gzip
 import csv
-import json
 import os
-import tempfile
-import heapq
 from tqdm import tqdm
 
 

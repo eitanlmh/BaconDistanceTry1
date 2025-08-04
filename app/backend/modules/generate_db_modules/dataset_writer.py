@@ -1,5 +1,4 @@
 import os
-import json
 from collections import defaultdict
 import networkx as nx
 import pickle
@@ -7,8 +6,6 @@ from itertools import combinations
 
 
 data_dir = "data/parsed_data"
-# output = os.path.join(data_dir, "dataset.json")
-# output_graph_png = os.path.join(data_dir, "movie_actor_graph.png")
 
 output_graph_pkl = os.path.join(data_dir, "actor_graph_meta.pkl")
 output_actor_name_to_id_pkl = os.path.join(data_dir, "actor_name_to_id.pkl")
@@ -26,7 +23,6 @@ def write_dataset(actor_per_movie, max_movies=None):
     actor_name_to_id = {}
     movie_id_to_actors_id = defaultdict(set)
     actor_name_to_movie_ids = defaultdict(set)
-    # dataset = []
 
     G = nx.Graph()
 
@@ -36,13 +32,6 @@ def write_dataset(actor_per_movie, max_movies=None):
             if len(seen_movies) >= max_movies:
                 break
             seen_movies.add(movie_id)
-
-        # dataset.append({
-        #     "movie_id": movie_id,
-        #     "movie_name": movie_name,
-        #     "actor_id": actor_id,
-        #     "actor_name": actor_name
-        # })
 
         actor_name = actor_name.strip()
         actor_name_to_id[actor_name] = actor_id
@@ -56,27 +45,6 @@ def write_dataset(actor_per_movie, max_movies=None):
     for actors in movie_id_to_actors_id.values():
         for a, b in combinations(actors, 2):
             G.add_edge(a, b)
-        #
-        # movie_node = f"{movie_id}"
-        # actor_node = f"{actor_id}"
-        #
-        # G.add_node(movie_node, type="movie", name=movie_name)
-        # G.add_node(actor_node, type="actor", name=actor_name)
-        # G.add_edge(movie_node, actor_node)
-
-    # try:
-    #     with open(output, mode='w',encoding="utf-8") as file:
-    #         json.dump(dataset, file, ensure_ascii=False, indent=2)
-    #         print(f"dataset saved to {output} with {len(dataset)} rows.")
-    # except IOError as e:
-    #     print(f"error writing to file {output}: {e}")
-    #     return
-    #
-    # try:
-    #     nx.write_gml(G, output_graph_gml)
-    #     print(f"graph saved to {output_graph_gml}.")
-    # except IOError as e:
-    #     print(f"error writing to file {output_graph_gml}: {e}")
 
     try:
         with open(output_graph_pkl, "wb") as pkl_file:
