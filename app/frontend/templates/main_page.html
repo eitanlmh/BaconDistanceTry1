@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5, user-scalable=yes, minimal-ui"/>
 
         <meta name="color-scheme" content="light dark">
 
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="../static/style.css">
 
-        <script type="text/javascript" src="js.js"></script>
+        <script type="text/javascript" src="../static/js.js"></script>
 
         <title>Distance from Kevin Bacon!</title>
     </head>
     <body class="column">
         <h1>Welcome</h1>
 
-        <form id="searchForm" action="/main_page.html">
+        <form id="searchForm" action="/" method="post">
             <label for="actor_name" style="align-content: center;">Please write an actor name to calculate the Distance from Kevin Bacon</label>
             <input type="text" id="actor_name" name="actor_name" required>
+<!--            <input type="text" id="actor_name" required>-->
             <div class="error" id="actor_name_error"></div>
 
-            <button>Calculate</button>
+            <button type="submit">Calculate</button>
         </form>
+
+    {% if result %}
+        <div>
+            <h3>Result is:</h3>
+            <h3>{{ result }}</h3>
+        </div>
+    {% endif %}
     </body>
 </html>

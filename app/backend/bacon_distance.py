@@ -38,6 +38,7 @@ def load_or_build_graph():
 
         return graph, actor_name_to_id, actor_name_to_movie_ids
 
+
 def main():
 
     try:
