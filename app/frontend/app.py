@@ -1,68 +1,92 @@
 import time
-
-from flask import Flask, make_response, render_template, session, redirect, request
+from flask import Flask, render_template, request
 import threading
-import subprocess
 import os
 from app.backend.bacon_distance import get_bacon_distance
 import pickle
+
+from app.backend.generate_db import generate_db
+
 app = Flask(__name__)
 
 #global vars to hold the loaded data
+example_graph = None
+example_actor_name_to_id = None
+
 graph = None
 actor_name_to_id = None
 actor_name_to_movie_ids = None
 
+data_source = None
 
-def run_generate_db():
-    backend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend"))
-    dataset_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", backend_path, "data", "parsed_data", "actor_graph_meta.pkl"))
+example_graph_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend", "data", "example_parsed_data", "actor_graph_meta.pkl"))
+real_graph_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend", "data", "parsed_data", "actor_graph_meta.pkl"))
 
-    if not os.path.exists(dataset_path) :
-        print("Dataset not found. running generate_db.py...")
-        subprocess.run(["python", "generate_db.py"], cwd = backend_path)
-    else:
-        print("dataset and cached dataset found. skipping generate_db.py...")
 
-generate_db_thread = threading.Thread(target=run_generate_db())
-generate_db_thread.start()
-generate_db_thread.join()
-def load_cache():
-    print("starting to load cache...")
-    global graph, actor_name_to_id
-    base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend", "data", "parsed_data"))
+@app.route("/", methods=["GET"])
+def choose_data():
+    return render_template("choose_data.html")
 
-    with open(os.path.join(base_path, "actor_graph_meta.pkl"), "rb") as f:
-        graph = pickle.load(f)
-
-    with open(os.path.join(base_path, "actor_name_to_id.pkl"), "rb") as f:
-        actor_name_to_id = pickle.load(f)
-
-start_time = time.time()
-load_cache()
-end_time = time.time()
-
-print("cache loaded in {} seconds".format(end_time - start_time))
-@app.route("/", methods=["GET", "POST"])
+@app.route("/distance", methods=["GET", "POST"])
 def main():
-    result = None
+    global graph, actor_name_to_id, actor_name_to_movie_ids, data_source, example_graph_path, real_graph_path
+
+    if request.method == "GET":
+        data_source = request.args.get("data_source")
+        print(f"data_source: {data_source}")
+
+        def load_data():
+            global graph, actor_name_to_id
+
+            if data_source == "example":
+                base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend", "data", "example_parsed_data"))
+            else:
+                base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend", "data", "parsed_data"))
+
+            graph_path = os.path.join(base_path, "actor_graph_meta.pkl")
+            actor_name_to_id_path = os.path.join(base_path, "actor_name_to_id.pkl")
+
+            if not (os.path.exists(graph_path) and os.path.exists(actor_name_to_id_path)):
+                print(f"{data_source} dataset not found. Running generate_db({data_source})...")
+                generate_db(data_source)
+            else:
+                print(f"{data_source} cached dataset found. Skipping generate_db({data_source})...")
+
+            with open(graph_path, "rb") as f:
+                graph = pickle.load(f)
+
+            with open(actor_name_to_id_path, "rb") as f:
+                actor_name_to_id = pickle.load(f)
+
+            print("Cache loaded")
+
+
+        db_thread = threading.Thread(target=load_data)
+        db_thread.start()
+        db_thread.join()
+
+
+    finale_answer = None
+
     if request.method == "POST":
         actor_name = request.form.get("actor_name")
-        if actor_name:
-            distance = get_bacon_distance(actor_name.strip().title(), graph, actor_name_to_id)
+
+        if actor_name and graph and actor_name_to_id:
+            distance = get_bacon_distance(actor_name, graph, actor_name_to_id)
 
 
             if isinstance(distance, int):
                 if distance == 0:
-                    result = "This is Kevin Bacon!"
+                    finale_answer = "This is Kevin Bacon!"
                 elif distance == float("inf"):
-                    result = f"No connection was found between Kevin Bacon and {actor_name}"
+                    finale_answer = f"No connection was found between Kevin Bacon and {actor_name}"
                 else:
-                    result = f"Bacon distance for {actor_name} is {distance}"
+                    finale_answer = f"Bacon distance for {actor_name} is {distance}"
             else:
-                result = "No actor name was provided"
+                finale_answer = "No actor name was provided"
 
-    return render_template("main_page.html", result=result)
+    return render_template("main_page.html", result=finale_answer)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
