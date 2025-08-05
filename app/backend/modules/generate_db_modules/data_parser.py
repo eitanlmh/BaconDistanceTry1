@@ -53,16 +53,14 @@ def actor_ids(): # return a dict of actor id with actor name
 
     return actor_id
 
-def actor_per_movie(movie_ids, actor_ids):
-    print("files in data", os.listdir(data_dir)) #Listing directory files
+def actor_per_movie(movie_ids, actor_ids, actor_per_movie_path):
 
-    actor_per_movie_file = os.path.join(data_dir, "title_principals.tsv.gz")
     actor_per_movie = []
 
     try:
-        with gzip.open(actor_per_movie_file, "rt", encoding="utf-8") as file:
+        with gzip.open(actor_per_movie_path, "rt", encoding="utf-8") as file:
             reader = csv.DictReader(file, delimiter="\t")
-            print("reading actor per movie IDs from {}".format(actor_per_movie_file))
+            print("reading actor per movie IDs from {}".format(actor_per_movie_path))
             for row in tqdm(reader, desc="Processing actor/movie pairs ", unit="rows"):
 
                 movie_id = row["tconst"]
@@ -74,11 +72,10 @@ def actor_per_movie(movie_ids, actor_ids):
                 if movie_id not in movie_ids or actor_id not in actor_ids:
                     continue
 
-                movie_name = movie_ids[movie_id]
                 actor_name = actor_ids[actor_id]
 
-                actor_per_movie.append((movie_id, movie_name, actor_id, actor_name))
-        print("read {} movies and its actors from {}".format(len(actor_per_movie), actor_per_movie_file))
+                actor_per_movie.append((movie_id, actor_id, actor_name))
+        print("read {} movies and its actors from {}".format(len(actor_per_movie), actor_per_movie_path))
     except Exception as e:
         print(f"failed to read movies and its actors data: {e}")
 

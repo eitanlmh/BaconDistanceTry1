@@ -1,10 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
+    <head>
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=5, user-scalable=yes, minimal-ui"/>
+
+        <meta name="color-scheme" content="light dark">
+
+        <link rel="stylesheet" href="../static/style.css">
+
+        <script type="text/javascript" src="../static/js.js"></script>
+
+        <title>Distance from Kevin Bacon!</title>
+    </head>
+    <body class="column">
+        <h1>Welcome</h1>
+
+        <form id="choose_data" action="/distance" method="GET" style="align-content: center;">
+<!--            <label for="actor_name" style="align-content: center;">-->
+<!--                Please write an actor name to calculate the Distance from Kevin Bacon-->
+<!--                <input type="text" id="actor_name" name="actor_name" style="align-content: center;" required>-->
+<!--            </label>-->
+
+            <p>Choose data source:</p>
+                <label for="example_data" style="align-content: center;">
+                    <input type="radio" id="example_data" name="data_source" value="example" checked />
+                    Use example data
+                </label><br>
+                <label for="real_data" style="align-content: center;">
+                    <input type="radio" id="real_data" name="data_source" value="real" />
+                    Use real IMDb data
+                </label><br>
+            <button type="submit">lets find the distance</button>
+        </form>
+    </body>
 </html>

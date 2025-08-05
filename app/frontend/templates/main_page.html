@@ -14,13 +14,27 @@
     <body class="column">
         <h1>Welcome</h1>
 
-        <form id="searchForm" action="/" method="post">
-            <label for="actor_name" style="align-content: center;">Please write an actor name to calculate the Distance from Kevin Bacon</label>
-            <input type="text" id="actor_name" name="actor_name" required>
-<!--            <input type="text" id="actor_name" required>-->
-            <div class="error" id="actor_name_error"></div>
+        <form id="searchForm" action="/distance" method="post" style="align-content: center;">
+            <label for="actor_name" style="align-content: center;">
+                Please write an actor name to calculate the Distance from Kevin Bacon
+                <input type="text" id="actor_name" name="actor_name" style="align-content: center;" required>
+            </label>
 
+<!--            <p>Choose data source:</p>-->
+<!--                <label for="example_data" style="align-content: center;">-->
+<!--                    <input type="radio" id="example_data" name="data_source" value="example" checked />-->
+<!--                    Use example data-->
+<!--                </label><br>-->
+<!--                <label for="real_data" style="align-content: center;">-->
+<!--                    <input type="radio" id="real_data" name="data_source" value="real" />-->
+<!--                    Use real IMDb data-->
+<!--                </label><br>-->
             <button type="submit">Calculate</button>
+        </form>
+
+         <form id="back_to_choose_data" action="/" method="get" style="align-content: center;">
+
+            <button type="submit">choose different data</button>
         </form>
 
     {% if result %}
