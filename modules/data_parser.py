@@ -2,9 +2,7 @@ import gzip
 import csv
 from tqdm import tqdm
 
-data_dir = "data" # This is where our data is.
-downloaded_data_dir = "real_data"
-example_data_dir = "example_data"
+
 def movie_ids(movie_path): # return a dict of movie id with movie name
 
     movie_ids = {}
@@ -74,9 +72,4 @@ def actor_per_movie(movie_ids, actor_ids, movie_per_actors_path):
 
     return actor_per_movie
 
-# if __name__ == "__main__":
-#
-#     #movie_ids()
-#     #actor_ids()
-#     actor_per_movie(movie_ids(), actor_ids())
 
