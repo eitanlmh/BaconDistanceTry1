@@ -1,39 +1,16 @@
 import os
-from collections import defaultdict
 import networkx as nx
 import pickle
-from itertools import combinations
 
 
-data_dir = os.path.join(os.path.dirname(__file__),"..","..","data")
-real_dir = os.path.join(data_dir, "parsed_data")
-example_dir = os.path.join(data_dir, "example_parsed_data")
-
-output_graph_pkl = os.path.join(real_dir, "actor_graph_meta.pkl")
-output_actor_name_to_id_pkl = os.path.join(real_dir, "actor_name_to_id.pkl")
-output_actor_name_to_movie_ids_pkl = os.path.join(real_dir, "actor_name_to_movie_ids.pkl")
-
-example_output_graph_pkl = os.path.join(example_dir, "actor_graph_meta.pkl")
-example_output_actor_name_to_id_pkl = os.path.join(example_dir, "actor_name_to_id.pkl")
-example_output_actor_name_to_movie_ids_pkl = os.path.join(example_dir, "actor_name_to_movie_ids.pkl")
-
-
-def dataset_writer(actor_per_movie, data_source, max_movies=None):
-    """
-    write (movie, actor) airs i to a csv file.
-    if max_movies is given, only include that many movies.
-    """
-    os.makedirs(data_dir, exist_ok=True)
-    os.makedirs(real_dir, exist_ok=True)
-    os.makedirs(example_dir, exist_ok=True)
+def dataset_writer(actor_per_movie, path, max_movies=None):
 
     seen_movies = set()
-    actor_name_to_id = {}
-    movie_id_to_actors_id = defaultdict(set)
-    actor_name_to_movie_ids = defaultdict(set)
 
-    G = nx.Graph()
+    gdataset = nx.Graph()
 
+    movie_nodes = set()
+    actor_nodes = set()
 
     for movie_id, actor_id, actor_name in actor_per_movie:
         if max_movies is not None and movie_id not in seen_movies:
@@ -41,62 +18,23 @@ def dataset_writer(actor_per_movie, data_source, max_movies=None):
                 break
             seen_movies.add(movie_id)
 
-        actor_name = actor_name.strip()
-        actor_name_to_id[actor_name] = actor_id
-        actor_name_to_movie_ids[actor_name].add(movie_id)
+        if movie_id not in movie_nodes:
+            gdataset.add_node(movie_id, node_type="movie")
+            movie_nodes.add(movie_id)
 
-        movie_id_to_actors_id[movie_id].add(actor_id)
+        if actor_id not in actor_nodes:
+            gdataset.add_node(actor_id, node_type="actor", name=actor_name)
+            actor_nodes.add(actor_id)
 
-        if not G.has_node(actor_id):
-            G.add_node(actor_id, name=actor_name)
+        gdataset.add_edge(movie_id, actor_id)
 
-    for actors in movie_id_to_actors_id.values():
-        for a, b in combinations(actors, 2):
-            G.add_edge(a, b)
+    output = os.path.join(path, "dataset.pkl")
 
-    if data_source == "real":
-        try:
-            with open(output_graph_pkl, "wb") as pkl_file:
-                pickle.dump(G, pkl_file)
-                print(f"Graph pickled to {output_graph_pkl}.")
-        except IOError as e:
-            print(f"Error pickling graph to {output_graph_pkl}: {e}")
+    try:
+        with open(output, "wb") as pkl_file:
+            pickle.dump(gdataset, pkl_file)
+            print(f"Graph pickled to {path}.")
+    except IOError as e:
+        print(f"Error pickling graph to {output}: {e}")
 
-        try:
-            with open(output_actor_name_to_id_pkl, "wb") as pkl_file:
-                pickle.dump(actor_name_to_id, pkl_file)
-                print(f"actor_name_to_id pickled to {output_actor_name_to_id_pkl}.")
-        except IOError as e:
-            print(f"Error pickling actor_name_to_id to {output_actor_name_to_id_pkl}: {e}")
-
-        try:
-            with open(output_actor_name_to_movie_ids_pkl, "wb") as pkl_file:
-                pickle.dump(actor_name_to_movie_ids, pkl_file)
-                print(f"actor_name_to_movie_ids pickled to {output_actor_name_to_movie_ids_pkl}.")
-        except IOError as e:
-            print(f"Error pickling graph to {output_actor_name_to_movie_ids_pkl}: {e}")
-
-
-    if data_source == "example":
-        try:
-            with open(example_output_graph_pkl, "wb") as pkl_file:
-                pickle.dump(G, pkl_file)
-                print(f"Graph pickled to {example_output_graph_pkl}.")
-        except IOError as e:
-            print(f"Error pickling graph to {example_output_graph_pkl}: {e}")
-
-        try:
-            with open(example_output_actor_name_to_id_pkl, "wb") as pkl_file:
-                pickle.dump(actor_name_to_id, pkl_file)
-                print(f"actor_name_to_id pickled to {example_output_actor_name_to_id_pkl}.")
-        except IOError as e:
-            print(f"Error pickling actor_name_to_id to {example_output_actor_name_to_id_pkl}: {e}")
-
-        try:
-            with open(example_output_actor_name_to_movie_ids_pkl, "wb") as pkl_file:
-                pickle.dump(actor_name_to_movie_ids, pkl_file)
-                print(f"actor_name_to_movie_ids pickled to {example_output_actor_name_to_movie_ids_pkl}.")
-        except IOError as e:
-            print(f"Error pickling graph to {example_output_actor_name_to_movie_ids_pkl}: {e}")
-
-
+    print(f"dataset saved to graph with {gdataset}.")
