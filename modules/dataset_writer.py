@@ -4,10 +4,6 @@ import pickle
 
 
 def dataset_writer(actor_per_movie, path, max_movies=None):
-    """
-    write (movie, actor) airs i to a csv file.
-    if max_movies is given, only include that many movies.
-    """
 
     seen_movies = set()
 
