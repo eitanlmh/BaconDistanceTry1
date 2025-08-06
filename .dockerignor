@@ -6,9 +6,8 @@ __pycaches__/
 
 .venv/
 
-app/backend/data/downloaded_data
-app/backend/data/middle_station_for_debug
-app/backend/data/parsed_data
+!app/backend/data/real_data
+!app/backend/data/real_parsed_data
 
 
 *.tsv
